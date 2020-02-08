@@ -1,0 +1,91 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+{% load leaflet_tags %}
+{% leaflet_css %}
+{% leaflet_js %}
+<head>
+  <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+          html, body, #main {
+              height: 100%;
+              width: 100%;
+          }
+          #map {
+            height: 100%;
+          }
+  </style>
+</head>
+
+<body >
+    
+    <div class="w3-row-padding w3-padding-large">
+      <div class="w3-twothird">
+        <div style="width: 100%;" class="w3-center">
+          <form method="POST" class="post-form" action="{% url 'main:street_chronology' street_id %}">{% csrf_token %}
+          <label for="#date">Переглянути хронологію на дату:</label>
+          <input required id="date" name="date" type="date">
+          <button type="submit" class="w3-button w3-black">Переглянути</button>
+        </form>
+        </div>
+        <div style="height: 500px;" id="map">{% leaflet_map "main" callback="map_init" %}</div>
+      </div>
+      <div class="w3-third w3-container">
+        <br>
+        <br>
+        <h2>Хронологічні дані:</h2>
+        <p>Дата:{{ date }}</p>
+        <h3>Вулиці та сегменти:</h3>
+        <ul style="width: 300px;" class="w3-ul w3-card-4">
+          {% for street,segments in hash_street.items %}
+          {% if segments %}
+          <li class="w3-large w3-khaki w3-round w3-text-black">
+          {% else %}
+          <li class="w3-large w3-text-grey">
+          {% endif %}
+            {{ street.type }}: <a href="{% url 'main:detail' street.id %}">{{ street.name }}</a>
+            {% if segments %}
+              <ul  class="w3-border-left w3-border-cyan">
+                
+                <span>Сегменти:</span>
+                {% for s in segments %}
+                  <li>{{ s.id }} -- {{ s.district }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </{{>
+          
+          {% endfor %}
+          </ul>
+      </div>
+    </div>
+ 
+</body>
+<script type="text/javascript">
+  function map_init(map,options)
+  {
+    map.setView([50.45, 30.5], 11);
+    var myStyle = {
+      "color": "#ff7800",
+      "weight": 5,
+      "opacity": 0.65
+    };
+    {% for street,segments in hash_street.items %}
+      {% for s in segments %}
+      var geojson = {{s.geom.geojson | safe}}
+      L.geoJSON(geojson, {
+        style: myStyle,
+        onEachFeature: function (feature, layer) {
+        layer.bindPopup('<p> {{street.name}} '+"{{street.type}}"+'</p>'+'<p>Номер сегменту у БД: '+{{s.id}}+'</p>'+'<p>Район: '+"{{s.district}}"+'</p>');
+        }
+        }).addTo(map);
+        {% endfor %}
+    {% endfor %}
+    //map.fitBounds(geojson.getBounds());
+  }
+</script>
+{% endblock %}

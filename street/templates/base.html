@@ -1,0 +1,45 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <!-- Required meta tags -->
+<title>Вулиці Києва</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<body>
+  <!-- <div class="navbar"> -->
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4;">
+    <button class="w3-bar-item w3-button w3-hide-large  w3-hover-white" onclick="w3_open();"><i class="fa fa-bars"></i>  Меню</button>
+      <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i>  Вулиці</a>
+      <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i>  Статистика</a>
+      <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i>  Додаткова інформація</a>
+      <a class="w3-button w3-right w3-hover-white"
+        {% if user.is_authenticated %}
+        href="/admin">Адмін сторінка
+        {% else %}
+        href="{% url 'login' %}">Увійти
+        {% endif %}
+      </a>
+    </div>
+
+  <div style="padding-top: 40px">
+
+  {% block content %}
+
+  {% endblock %}
+  </div>
+
+  {% block footer %}
+  {% endblock %}
+</body>
+</html>

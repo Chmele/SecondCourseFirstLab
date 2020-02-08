@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="w3-content">
+
+  <div class="w3-black w3-bar w3-center">
+    <h2>Створити операцію на основі документу:</h2>
+    <a target = "_blank" href = "/media/{{ document.path_pdf }}" class="w3-xlarge">{{ document.origin_name }} ({{ document.name }}) {{ document.date }}</a>
+  </div>
+
+    <br>
+
+  <div class="w3-row-padding w3-center">
+    <h4>Доступні операції:</h4>
+    <div class="w3-quarter">
+      <div class="w3-hover-shadow w3-panel w3-card w3-round-xlarge w3-light-green" style="width:70%; margin:auto"><a href="{% url 'main:street_new' %}">
+        <p class="w3-large">Додати вулицю</p>
+        <p><i class="fa fa-plus w3-xxlarge" aria-hidden="true"></i></p></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

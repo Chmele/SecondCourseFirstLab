@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% load static %}
+
+{% load leaflet_tags %}
+{% leaflet_css %}
+{% leaflet_js %}
+<link rel="stylesheet" href="{% static 'css/street_list.css' %}">
+
+
+<div class="sidebar w3-center">
+  <h3 class="w3-padding">Панель модератора:</h3>
+
+  <div class="w3-hover-shadow w3-panel w3-card w3-round-xlarge w3-light-green" style="width:70%; margin:auto"><a href="{% url 'main:segment_new' street.id %}">
+    <p class="w3-large">Додати сегмент</p>
+    <p><i class="fa fa-road w3-xxlarge" aria-hidden="true"></i></p></a>
+  </div>
+  <hr>
+  <div class="w3-hover-shadow w3-panel w3-card w3-round-xlarge w3-light-green" style="width:70%; margin:auto"><a href="{% url 'main:street_rename' street.id %}">
+    <p>Перейменувати вулицю</p>
+    <p><i class="fa fa-edit w3-xxlarge" aria-hidden="true"></i></p></a>
+  </div>
+</div>
+
+<div class="w3-row">
+<div class="w3-col w3-center w3-container m3 l2 w3-light-grey">
+  <!-- sidebar here -->
+</div>
+<div class="w3-col w3-container m9 l10">
+
+  <div class="w3-black w3-bar w3-center">
+    <h2>Вулиця: {{ street.name }}</h2>
+  </div>
+
+  <div class="w3-row-padding w3-padding-large">
+
+
+    <div class="w3-third">
+      <a class="w3-btn w3-black w3-left" href="{% url 'main:search' %}"><i class="fas fa-arrow-left"></i><span> На головну</span></a>
+    </div>
+
+
+    <div class="w3-third">
+      <a class="w3-btn w3-black w3-left" href="{% url 'main:street_chronology' street.id %}">Переглянути хронологію вулиці</a>
+    </div>
+
+    <div class="w3-third w3-center">
+      <p id="countSegments" class="w3-large w3-padding">Кількість сегментів: {{ street.count_segments_by_date }}</p>
+    </div>
+
+    </div>
+
+    <div class="w3-row-padding">
+      <div class="w3-half">
+        <div style="width: 100%;" class="w3-center">
+          <form method="POST" class="post-form" action="{% url 'main:detail' street.id %}">{% csrf_token %}
+          <label for="#date">Переглянути вулицю на дату:</label>
+          <input required id="date" name="date" type="date">
+          <button type="submit" class="w3-button w3-black">Переглянути</button>
+        </form>
+        </div>
+        <div style="height: 400px;" id="map">{% leaflet_map "main" callback="map_init" %}</div>
+      </div>
+
+    <div class="w3-half">
+
+    <table id = "segments" class="w3-table-all">
+      <thead>
+       <tr class="w3-black">
+         <th>Номер у б/д</th>
+         <th>Район</th>
+       </tr>
+     </thead>
+
+      {% for segment in segment_list %}
+        <tr>
+          <td><a href="{% url 'main:segment_detail' street.id segment.id %}">{{ segment.id }}</a></td>
+          <td>{{ segment.district }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">Сегменти відсутні!</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<head>
+  <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+          html, body, #main {
+              height: 100%;
+              width: 100%;
+          }
+          #map {
+            height: 100%;
+          }
+  </style>
+</head>
+
+
+
+<script type="text/javascript">
+  function map_init(map,options)
+  {
+    var lon = "{{ xcoord }}".replace(",", ".");
+    var lat = "{{ ycoord }}".replace(",", ".");
+    map.setView([lat, lon], 16);
+    var myStyle = {
+      "color": "#ff7800",
+      "weight": 5,
+      "opacity": 0.65
+    };
+    {% for s in segment_list.all %}
+      var geojson = {{s.geom.geojson | safe}}
+      L.geoJSON(geojson, {
+        style: myStyle,
+        onEachFeature: function (feature, layer) {
+        layer.bindPopup('<h3> {{street}} '+"{{street.type}}"+'</h3>'+'<h4>Номер сегменту у БД: '+{{s.id}}+'</h4>'+'<h4>Район: '+"{{s.district}}"+'</h4>');
+        }
+        }).addTo(map);
+    {% endfor %}
+    map.fitBounds(geojson.getBounds());
+
+  }
+</script>
+
+{% endblock %}

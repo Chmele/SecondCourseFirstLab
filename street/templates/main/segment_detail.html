@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+{% load leaflet_tags %}
+{% leaflet_css %}
+{% leaflet_js %}
+<head>
+
+  <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+          html, body, #main {
+              height: 100%;
+              width: 100%;
+          }
+          #map {
+            height: 100%;
+          }
+  </style>
+</head>
+
+<link rel="stylesheet" href="{% static 'css/street_list.css' %}">
+
+
+<div class="sidebar w3-center">
+  <h3 class="w3-padding">Панель модератора:</h3>
+
+  <div class="w3-hover-shadow w3-panel w3-card w3-round-xlarge w3-light-green" style="width:70%; margin:auto"><a href="{% url 'main:segment_change_geom' street_id segment.id %}">
+    <p>Змінити геометрію сегменту</p>
+    <p><i class="fa fa-road w3-xxlarge" aria-hidden="true"></i></p></a>
+  </div>
+  <hr>
+  <div class="w3-hover-shadow w3-panel w3-card w3-round-xlarge w3-light-green" style="width:70%; margin:auto"><a href="{% url 'main:segment_change_attributes' street_id segment.id %}">
+    <p>Змінити атрибути сегменту</p>
+    <p><i class="fa fa-edit w3-xxlarge" aria-hidden="true"></i></p></a>
+  </div>
+</div>
+
+<body style = "height: 100%;width: 100%;padding: 0px; margin: 0px">
+
+  <div class="w3-row">
+    <div class="w3-col w3-center w3-container m3 l2 w3-light-grey">
+      <!-- sidebar here -->
+    </div>
+    <div class="w3-col w3-container m9 l10">
+    
+      <div class="w3-black w3-center">
+        <a href={% url 'main:detail' street_id %} class="w3-left w3-button w3-black">Повернутись назад</a>
+        <h2>Сегмент: {{ segment.id }}</h2>
+      </div>
+
+
+      <div class="w3-row-padding">
+        <div class="w3-half">
+          <div style="height: 400px;" id="map">{% leaflet_map "main" callback="map_init" %}</div>
+        </div>
+
+        <div class="w3-half">
+          <h2>Атрибути сегменту:</h2>
+          <ul class="w3-ul">
+            <li>Номер у БД: {{ segment.id }}</li>
+            <li>Район: {{ segment.district }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>  
+  </div>
+
+</body>
+
+<head>
+  <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+          html, body, #main {
+              height: 100%;
+              width: 100%;
+          }
+          #map {
+            height: 100%;
+          }
+  </style>
+</head>
+<script type="text/javascript">
+  function map_init(map,options){
+    var lon = "{{ xcoord }}".replace(",", ".");
+    var lat = "{{ ycoord }}".replace(",", ".");
+    map.setView([lat, lon], 16);
+    var myStyle = {
+      "color": "#ff7800",
+      "weight": 5,
+      "opacity": 0.65
+    };
+      var geojson = {{segment.geom.geojson | safe}}
+      L.geoJSON(geojson, {
+        style: myStyle,
+        onEachFeature: function (feature, layer) {
+        layer.bindPopup('<h4>Номер сегменту у БД: '+{{segment.id}}+'</h4>'+'<h4>Район: '+"{{segment.district}}"+'</h4>');
+        }
+        }).addTo(map);
+    map.fitBounds(geojson.getBounds());
+
+  }
+</script>
+{% endblock %}

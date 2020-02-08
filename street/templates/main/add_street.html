@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/add_document.css' %}">
+
+<div class="w3-content">
+    <div class="w3-black w3-bar w3-center">
+      <h2>Додати вулицю:</h2>
+      <p>На основі документу:</p>
+      <a target = "_blank" href = "/media/{{ document.path_pdf }}" class="w3-xlarge">{{ document.origin_name }} ({{ document.name }}) {{ document.date }}</a>
+    </div>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form_operation.as_p }}
+        {{ form.as_p }}
+        <button type="submit" class="w3-button w3-black w3-right">Зберегти</button>
+    </form>
+</div>
+{% endblock %}

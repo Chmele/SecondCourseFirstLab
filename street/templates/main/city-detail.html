@@ -1,0 +1,44 @@
+{% load leaflet_tags %}
+{% leaflet_css %}
+{% leaflet_js %}
+<script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+{% block content %}
+<head>
+  <style>
+          body {
+              padding: 0;
+              margin: 0;
+          }
+          html, body, #main {
+              height: 100%;
+              width: 100%;
+          }
+          #map {
+            height: 100%;
+          }
+  </style>
+</head>
+<body style = "height: 100%;width: 100%;padding: 0px; margin: 0px">
+
+<div id="map">
+    {% leaflet_map "main" callback="map_init" %}
+</div>
+
+
+
+</body>
+<script type="text/javascript">
+  function map_init(map,options)
+  {
+
+    var myStyle = {
+      "color": "#ff7800",
+      "weight": 5,
+      "opacity": 0.65
+    };
+    var geojson = {{geom.geojson | safe}}
+    L.vectorGrid.slicer(geojson).addTo(map);
+    //map.fitBounds(geojsonLayer.getBounds());
+  }
+</script>
+{% endblock %}
