@@ -14,12 +14,18 @@
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<style>
+  #main{
+    height: 100%;
+    z-index:2
+  }
+</style>
 
 <body>
   <!-- <div class="navbar"> -->
-    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4;">
-    <button class="w3-bar-item w3-button w3-hide-large  w3-hover-white" onclick="w3_open();"><i class="fa fa-bars"></i>  Меню</button>
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4; display: block;">
+    {% block navbar-items %}
+      <button class="w3-bar-item w3-button w3-hide-large  w3-hover-white" onclick="w3_open();"><i class="fa fa-bars"></i>  Меню</button>
       <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i>  Вулиці</a>
       <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i>  Статистика</a>
       <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i>  Додаткова інформація</a>
@@ -30,16 +36,55 @@
         href="{% url 'login' %}">Увійти
         {% endif %}
       </a>
+    {% endblock navbar-items%}
     </div>
 
-  <div style="padding-top: 40px">
+  <div style="padding-top: 43px; height: 100vh;">
 
-  {% block content %}
+    {% block sidebar %}
+      <nav class="w3-sidebar w3-collapse w3-white w3-animate-left w3-rightbar w3-border-teal" style="z-index:3;width:300px; " id="mySidebar">
+        <h3 class="w3-padding">Панель модератора:</h3>
+        <div class="w3-bar-block">
+          {% block sidebar-content %}
+            <a id="sidebar_item" href="#" class="w3-bar-item w3-button w3-hide-large w3-hover-teal" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Закрити</a>  
+          {% endblock %}
+      </nav>
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+    {% endblock %}
 
-  {% endblock %}
+    <div class="w3-main" style="margin-left:300px; height: 100%;">
+      {% block content %}
+
+      {% endblock %}
+    </div>
   </div>
 
   {% block footer %}
   {% endblock %}
 </body>
 </html>
+
+<script>
+  // Get the Sidebar
+  var mySidebar = document.getElementById("mySidebar");
+  
+  // Get the DIV with overlay effect
+  var overlayBg = document.getElementById("myOverlay");
+  
+  // Toggle between showing and hiding the sidebar, and add overlay effect
+  function w3_open() {
+    if (mySidebar.style.display === 'block') {
+      mySidebar.style.display = 'none';
+      overlayBg.style.display = "none";
+    } else {
+      mySidebar.style.display = 'block';
+      overlayBg.style.display = "block";
+    }
+  }
+  
+  // Close the sidebar with the close button
+  function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+  }
+  </script>

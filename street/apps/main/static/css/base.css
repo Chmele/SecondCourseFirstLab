@@ -6,4 +6,5 @@ a:hover{
   }
 #top_bar_item{
     border-radius: 20px 20px 0px 0px;
+    margin-right: 5px;
 }
