@@ -11,8 +11,17 @@ from django.http import Http404, HttpResponseRedirect
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
-
+from qsstats import QuerySetStats
 from dictionaries.models import *
+
+
+def StatsView(request):
+    streets = Street.objects.all()
+    s = Segment.objects.all().distinct('district', 'street')
+    values = [[i.name, s.filter(district=i.id).count()] for i in DictDistricts.objects.all()]
+    # streets = QuerySetStats(streets, aggregate = Count('id'))
+    # streets = streets.
+    return render(request, 'main/stats.html', {'values':values})
 
 
 def CityDetailView(request):

@@ -19,15 +19,20 @@
     height: 100%;
     z-index:2
   }
+  div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
 </style>
 
-<body>
-  <!-- <div class="navbar"> -->
-    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4; display: block;">
+<body style="height: 100vh;">
+  <div class="sticky">
+    <div class="w3-row w3-bar w3-teal w3-large" style="z-index:4; display: block;">
     {% block navbar-items %}
       <button class="w3-bar-item w3-button w3-hide-large  w3-hover-white" onclick="w3_open();"><i class="fa fa-bars"></i>  Меню</button>
       <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i>  Вулиці</a>
-      <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i>  Статистика</a>
+      <a href="{% url 'main:stats' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i>  Статистика</a>
       <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i>  Додаткова інформація</a>
       <a class="w3-button w3-right w3-hover-white"
         {% if user.is_authenticated %}
@@ -38,12 +43,13 @@
       </a>
     {% endblock navbar-items%}
     </div>
+  </div>
 
-  <div style="padding-top: 43px; height: 100vh;">
+  <div class="w3-row"style="height:calc(100% - 43px);">
 
     {% block sidebar %}
       <nav class="w3-sidebar w3-collapse w3-white w3-animate-left w3-rightbar w3-border-teal" style="z-index:3;width:300px; " id="mySidebar">
-        <h3 class="w3-padding">Панель модератора:</h3>
+        <h4 class="w3-padding">Панель модератора:</h4>
         <div class="w3-bar-block">
           {% block sidebar-content %}
             <a id="sidebar_item" href="#" class="w3-bar-item w3-button w3-hide-large w3-hover-teal" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Закрити</a>  

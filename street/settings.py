@@ -44,6 +44,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'googlecharts',
     'leaflet',
     'django.contrib.admin',
     'django.contrib.auth',
