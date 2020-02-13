@@ -4,7 +4,9 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <div id="piechart" style="width: 900px; height: 500px;"></div>
+    <div id="piechart" style="width: 1200px; height: 500px;z-index: 0;"></div>
+    <div id="chart_div" style="width: 1200px; height: 500px;z-index: 0;"></div>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -15,7 +17,7 @@
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             {% for i in values %}
-                ['{{i.0}}', {{i.1}}],
+              ['{{i.0}}', {{i.1}}],
             {% endfor %}
         ]);
 
@@ -28,5 +30,33 @@
         chart.draw(data, options);
       }
     </script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Проміжок',  'Кількість вулиць'],
+      {% for i in len_stat %}
+        ['{{i.0}}', {{i.1}}],
+      {% endfor %}
+    ]);
+
+    var options = {
+      title: 'Розподіл вулиць у системі за довжиною',
+      vAxis: {title: 'Кількість вулиць, шт'},
+      vAxis: {title: 'Довжина, м'},
+      //isStacked: true
+    };
+
+    var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+  }
+</script>
+
+
 
 {% endblock content %}

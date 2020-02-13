@@ -6,22 +6,37 @@ from .forms import *
 from django.shortcuts import render, redirect
 from django.http import Http404
 from datetime import datetime, date
-from django.db.models import Q, Count
-from django.http import Http404, HttpResponseRedirect
-from django.http import JsonResponse
+from django.db.models import Q, Count, Sum
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from qsstats import QuerySetStats
 from dictionaries.models import *
-
+from django.contrib.gis.db.models.functions import Length
 
 def StatsView(request):
     streets = Street.objects.all()
     s = Segment.objects.all().distinct('district', 'street')
     values = [[i.name, s.filter(district=i.id).count()] for i in DictDistricts.objects.all()]
-    # streets = QuerySetStats(streets, aggregate = Count('id'))
-    # streets = streets.
-    return render(request, 'main/stats.html', {'values':values})
+
+
+    split_by=10
+    min_len=0
+    max_len=1000
+    step = (max_len - min_len) / split_by
+    #segments = Segment.objects.annotate(l = Length('geom'))
+    q = Segment.objects.values('street').annotate(leng = Sum(Length('geom')))
+    ret = [[
+        "[ "
+        + str(int(min_len + step * i))
+        +", "
+        + str(int(min_len + step * (i + 1)))
+        + " )", 
+        q.filter(leng__gte= min_len + step * i)
+         .filter(leng__lt= min_len + step * (i + 1))
+         .count()]
+        for i in range(split_by)]
+    return render(request, 'main/stats.html', {'values':values, 'len_stat':ret})
 
 
 def CityDetailView(request):

@@ -19,40 +19,12 @@
 
 {% block navbar-items %}
 {{ block.super }}
-    
-    <!-- <a id="top_bar_item" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" href="{% url 'main:search' %}"><i class="fas fa-arrow-left"></i>  На головну</a> -->
     <a id="top_bar_item" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" href="{% url 'main:street_chronology' street.id %}"><i class="fa fa-clock-o"></i>  Переглянути хронологію вулиці</a>
     <a id="top_bar_item" class="w3-bar-item w3-left w3-padding w3-white">{{street.type}}: {{ street.name }}</a>
-    <a id="top_bar_item" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white">Кількість сегментів: {{ street.count_segments_by_date }}</a>
+    <!-- <a id="top_bar_item" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white">Кількість сегментів: {{ street.count_segments_by_date }}</a> -->
+    <button id="top_bar_item" class="w3-bar-item w3-button w3-hover-white" onclick="open_right();"><i class="fa fa-info-circle"></i></button>
 {% endblock %}
 
-
-<!-- <form method="POST" class="post-form" action="{% url 'main:detail' street.id %}">{% csrf_token %}
-  <label for="#date">Переглянути вулицю на дату:</label>
-  <input required id="date" name="date" type="date">
-  <button type="submit" class="w3-button w3-black">Переглянути</button>
-</form> -->
-
-
-<!-- <table id = "segments" class="w3-table-all">
-  <thead>
-   <tr class="w3-black">
-     <th>Номер у б/д</th>
-     <th>Район</th>
-   </tr>
- </thead>
-
-  {% for segment in segment_list %}
-    <tr>
-      <td><a href="{% url 'main:segment_detail' street.id segment.id %}">{{ segment.id }}</a></td>
-      <td>{{ segment.district }}</td>
-    </tr>
-  {% empty %}
-    <tr>
-      <td colspan="5">Сегменти відсутні!</td>
-    </tr>
-  {% endfor %}
-</table> -->
 
 
 {% block sidebar %}
@@ -108,7 +80,76 @@
     {% endfor %}
     map.fitBounds(geojson.getBounds());
   }
-  
 </script>
+
+
+<div id="right_sidebar" class="w3-white w3-container" style="display:block; height:100%; position: fixed; top:43px; right:0px; z-index: 1000;">
+  Кількість сегментів: {{ street.count_segments_by_date }}
+  <form method="POST" class="post-form" action="{% url 'main:detail' street.id %}">{% csrf_token %}
+    <label for="#date">Переглянути вулицю на дату:</label>
+    <input required id="date" name="date" type="date">
+    <button type="submit" class="w3-button w3-black">Переглянути</button>
+  </form>
+
+
+  <table id="segments" class="w3-table-all">
+    <thead>
+      <tr class="w3-black">
+        <th>Номер у б/д</th>
+        <th>Район</th>
+      </tr>
+    </thead>
+
+    {% for segment in segment_list %}
+    <tr>
+      <td><a href="{% url 'main:segment_detail' street.id segment.id %}">{{ segment.id }}</a></td>
+      <td>{{ segment.district }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">Сегменти відсутні!</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<script>
+  // Get the Sidebar
+  var mySidebar = document.getElementById("mySidebar");
+  
+  // Get the DIV with overlay effect
+  var overlayBg = document.getElementById("myOverlay");
+  
+  var right = document.getElementById("right_sidebar");
+
+  var map = document.getElementById("main");
+  // Toggle between showing and hiding the sidebar, and add overlay effect
+  function w3_open() {
+    if (mySidebar.style.display === 'block') {
+      mySidebar.style.display = 'none';
+      overlayBg.style.display = "none";
+    } else {
+      mySidebar.style.display = 'block';
+      overlayBg.style.display = "block";
+    }
+  }
+  
+  // Close the sidebar with the close button
+  function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+  }
+
+  function open_right(){
+    if (right.style.display === 'block') {
+      right.style.display = 'none';
+      overlayBg.style.display = "none";
+    } else {
+      right.style.display = 'block';
+      overlayBg.style.display = "block";
+    }
+  }
+
+  </script>
 
 {% endblock %}
