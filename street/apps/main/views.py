@@ -24,19 +24,21 @@ def StatsView(request):
     min_len=0
     max_len=5000
     step = (max_len - min_len) / split_by
-    #segments = Segment.objects.annotate(l = Length('geom'))
     q = Segment.objects.values('street').annotate(leng = Sum(Length('geom')))
     ret = [[
-        "[ "
-        + str(int(min_len + step * i))
-        +", "
-        + str(int(min_len + step * (i + 1)))
-        + " )", 
+        # "[ "
+        # + str(int(min_len + step * i))
+        # +", "
+        # + str(int(min_len + step * (i + 1)))
+        # + " )", 
+        "≤ " + str(int(min_len + step * (i + 1))),
         q.filter(leng__gte= min_len + step * i)
          .filter(leng__lt= min_len + step * (i + 1))
          .count()]
         for i in range(split_by)]
-    return render(request, 'main/stats.html', {'values':values, 'len_stat':ret})
+    street_count = Street.objects.count()
+    segment_count = Segment.objects.count()
+    return render(request, 'main/stats.html', {'values':values, 'len_stat':ret, 'street_count': street_count, 'segment_count': segment_count,})
 
 
 def CityDetailView(request):

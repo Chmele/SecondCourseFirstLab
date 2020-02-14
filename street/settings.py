@@ -105,7 +105,7 @@ DATABASES = {
         'NAME': 'street',
         'USER' : 'gis',
         'PASSWORD' : 'gis',
-        'HOST' : '127.0.0.1',
+        'HOST' : '192.168.1.79',
         'PORT' : '5432',
     }
 }

@@ -4,14 +4,38 @@
 {% endblock sidebar %}
 
 {% block content %}
-<div class="w3-col" style = "height: 100%">
-    <div class="w3-row" style = "width: 100%; height: 100%">
-      <div id="piechart" style="width: 100%; height: 100%;z-index: 0;">
+
+<div class="w3-row-padding w3-margin-top">
+  <div class="w3-half">
+    <div class="w3-container w3-teal w3-padding-16 w3-round-large">
+      <div class="w3-left"><i class="fa fa-road w3-xxxlarge"></i></div>
+      <div class="w3-right">
+        <h3>{{ street_count }}</h3>
+      </div>
+      <div class="w3-clear"></div>
+      <h4>Вулиць</h4>
+    </div>
+  </div>
+  <div class="w3-half">
+    <div class="w3-container w3-teal w3-padding-16 w3-round-large">
+      <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
+      <div class="w3-right">
+        <h3>{{ segment_count }}</h3>
+      </div>
+      <div class="w3-clear"></div>
+      <h4>Сегментів</h4>
+    </div>
+  </div>
+</div>
+
+<div class="w3-col" style = "height: 100%;z-index: 1;">
+    <div class="w3-row" style = "width: 100%; height: 70%;">
+      <div id="piechart" style="width: 100%; height: 100%;">
         
       </div>
     </div>
-    <div class="w3-row" style = "width: 100%; height: 100%">
-      <div id="chart_div" style="width: 100%; height: 100%;z-index: 0;">
+    <div class="w3-row" style = "width: 100%; height: 70%;">
+      <div id="chart_div" style="width: 100%; height: 100%;">
         
       </div>
     </div>
@@ -20,48 +44,31 @@
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
-
       function drawChart() {
-
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             {% for i in values %}
               ['{{i.0}}', {{i.1}}],
             {% endfor %}
         ]);
-
+        var data2 = google.visualization.arrayToDataTable([
+            ['Проміжок', 'Кількість вулиць'],
+            {% for i in len_stat %}
+              ['{{i.0}}', {{ i.1}}],
+            {% endfor %}
+        ]);
         var options = {
           title: 'Кількість вулиць за районами'
         };
-
+        var options2 = {
+          title: 'Розподіл вулиць у системі за довжиною',
+          vAxis: {title: 'Кількість вулиць, шт'},
+          hAxis: {title: 'Довжина, м'}
+        };
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
+        var chart2 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
         chart.draw(data, options);
-      }
-    </script>
-
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ['Проміжок',  'Кількість вулиць'],
-      {% for i in len_stat %}
-        ['{{i.0}}', {{i.1}}],
-      {% endfor %}
-    ]);
-
-    var options = {
-      title: 'Розподіл вулиць у системі за довжиною',
-      vAxis: {title: 'Кількість вулиць, шт'},
-      hAxis: {title: 'Довжина, м'},
-      //isStacked: true
-    };
-
-    var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
-
-    chart.draw(data, options);
+        chart2.draw(data2, options2);
   }
 </script>
 

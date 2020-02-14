@@ -1,21 +1,4 @@
-{% extends 'base.html' %}
-
-
-<!-- <head>
-  <style>
-    body, #map-container {
-      padding: 0;
-      margin: 0;
-    }
-      html, body, #map{
-        height: 100vh;
-        width: 100vw;
-  }
-  #map-container{
-    height: 1000px;
-  }
-  </style>
-</head> -->
+{% extends 'base_sidebar.html' %}
 
 {% block navbar-items %}
 {{ block.super }}
@@ -83,7 +66,7 @@
 </script>
 
 
-<div id="right_sidebar" class="w3-white w3-container" style="display:block; height:100%; position: fixed; top:43px; right:0px; z-index: 1000;">
+<div id="right_sidebar" class="w3-white w3-container" style="display:none; height:100%; position: fixed; top:43px; right:0px; z-index: 1000;">
   Кількість сегментів: {{ street.count_segments_by_date }}
   <form method="POST" class="post-form" action="{% url 'main:detail' street.id %}">{% csrf_token %}
     <label for="#date">Переглянути вулицю на дату:</label>
