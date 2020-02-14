@@ -6,6 +6,7 @@
 {% block content %}
 
 <div class="w3-row-padding w3-margin-top">
+
   <div class="w3-half">
     <div class="w3-container w3-teal w3-padding-16 w3-round-large">
       <div class="w3-left"><i class="fa fa-road w3-xxxlarge"></i></div>
@@ -16,6 +17,7 @@
       <h4>Вулиць</h4>
     </div>
   </div>
+
   <div class="w3-half">
     <div class="w3-container w3-teal w3-padding-16 w3-round-large">
       <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
@@ -29,16 +31,15 @@
 </div>
 
 <div class="w3-col" style = "height: 100%;z-index: 1;">
+
     <div class="w3-row" style = "width: 100%; height: 70%;">
-      <div id="piechart" style="width: 100%; height: 100%;">
-        
-      </div>
+      <div id="piechart" style="width: 100%; height: 100%;"></div>
     </div>
+
     <div class="w3-row" style = "width: 100%; height: 70%;">
-      <div id="chart_div" style="width: 100%; height: 100%;">
-        
-      </div>
+      <div id="chart_div" style="width: 100%; height: 100%;"></div>
     </div>
+
 </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -48,13 +49,13 @@
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             {% for i in values %}
-              ['{{i.0}}', {{i.1}}],
+              ['{{ i.0 }}', {{ i.1 }} ],
             {% endfor %}
         ]);
         var data2 = google.visualization.arrayToDataTable([
             ['Проміжок', 'Кількість вулиць'],
             {% for i in len_stat %}
-              ['{{i.0}}', {{ i.1}}],
+              ['{{ i.0 }}', {{ i.1 }} ],
             {% endfor %}
         ]);
         var options = {
@@ -71,7 +72,4 @@
         chart2.draw(data2, options2);
   }
 </script>
-
-
-
 {% endblock content %}

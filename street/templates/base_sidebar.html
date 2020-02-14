@@ -1,15 +1,13 @@
 {% extends 'first_base.html' %}
 {% block sidebar %}
-      <nav class="w3-sidebar w3-collapse w3-white w3-rightbar w3-border-teal" style="z-index:3;width:300px;display: none; " id="mySidebar">
-        <h4 class="w3-padding">Панель модератора:</h4>
-        <div class="w3-bar-block">
-          {% block sidebar-content %}
-            <!-- <a id="sidebar_item" href="#" class="w3-bar-item w3-button w3-hover-teal" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Закрити</a>   -->
-          {% endblock %}
+    <nav class="w3-sidebar w3-collapse w3-white w3-rightbar w3-border-teal" style="z-index:3;width:300px;display: none; " id="mySidebar">
+    <h4 class="w3-padding">Панель модератора:</h4>
+    <div class="w3-bar-block">
+        {% block sidebar-content %}
+            
+        {% endblock %}
       </nav>
-    <!-- <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div> -->
 {% endblock %}
-
 
 {% block with-content %}
 <div class="w3-main" style="margin-left:300px;height: 100%;">

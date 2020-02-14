@@ -1,12 +1,5 @@
 {% extends 'base_sidebar.html' %}
 
-
-<!-- sidebar -->
-{% block sidebar %}
-  {{ block.super }}
-{% endblock sidebar %}
-
-
 {% block sidebar-content %}
   {{ block.super }}
   <a id="sidebar_item" class="w3-bar-item w3-button w3-padding w3-hover-teal" 
@@ -17,10 +10,8 @@
     <i class="fa fa-plus"></i>  Додати вулицю</a>
 {% endblock sidebar-content %}
 
-
 {% block content %}
-
-{% load static %}
+  {% load static %}
 <link rel="stylesheet" href="{% static 'css/street_list.css' %}">
 <script src="{% static 'js/search.js' %}"></script>
 <!-- main content -->
@@ -35,13 +26,12 @@
         <input id="searchName" class="w3-input" type="text" name="name_vul" placeholder="Введіть назву..">
       </div>
 
-      
-
       <div class="w3-container w3-cell w3-cell-bottom ">
         <div class="w3-dropdown-hover" style="z-index:1">
           <button class="w3-black w3-btn" style="z-index:1"><i class="fa fa-filter"></i>  Фільтр</button>
           <div class="w3-padding w3-dropdown-content w3-bar-block w3-border" style="right:0; width:400px;">
             <h5><b>Фільтр за районом чи топонімом вулиці: </b></h5>
+
             <div class="w3-padding w3-container w3-teal w3-margin w3-border w3-round-large">
               <label for="districtSelect">Оберіть район:</label>
               <select id="districtSelect" class="w3-select w3-teal" onChange="myFunction()">
@@ -51,6 +41,7 @@
                 {% endfor %}
               </select>
             </div>
+
             <div class="w3-padding w3-container w3-teal w3-margin w3-border w3-round-large">
               <label for="typeSelect">Оберіть тип:</label>
               <select id="typeSelect" class="w3-select w3-teal" onChange="myFunction()">
@@ -60,19 +51,16 @@
                 {% endfor %}
               </select>
             </div>
+
           </div>
         </div>
       </div>
 
     </div>
-      <div class="w3-half">
-        <label for="countStreets">Кількість вулиць: {{ street_count }}</label>
-      </div>
 
-      <table id = "streets" class="w3-table-all"></table>
+    <div class="w3-half">
+      <label for="countStreets">Кількість вулиць: {{ street_count }}</label>
+    </div>
+    <table id = "streets" class="w3-table-all"></table>
   </div>
-<!-- </div> -->
-
-
-
 {% endblock %}
