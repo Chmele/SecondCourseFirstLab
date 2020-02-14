@@ -20,9 +20,9 @@ def StatsView(request):
     values = [[i.name, s.filter(district=i.id).count()] for i in DictDistricts.objects.all()]
 
 
-    split_by=10
+    split_by=25
     min_len=0
-    max_len=1000
+    max_len=5000
     step = (max_len - min_len) / split_by
     #segments = Segment.objects.annotate(l = Length('geom'))
     q = Segment.objects.values('street').annotate(leng = Sum(Length('geom')))

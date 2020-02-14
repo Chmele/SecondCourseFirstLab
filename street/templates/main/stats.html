@@ -4,9 +4,18 @@
 {% endblock sidebar %}
 
 {% block content %}
-    <div id="piechart" style="width: 1200px; height: 500px;z-index: 0;"></div>
-    <div id="chart_div" style="width: 1200px; height: 500px;z-index: 0;"></div>
-
+<div class="w3-col" style = "height: 100%">
+    <div class="w3-row" style = "width: 100%; height: 100%">
+      <div id="piechart" style="width: 100%; height: 100%;z-index: 0;">
+        
+      </div>
+    </div>
+    <div class="w3-row" style = "width: 100%; height: 100%">
+      <div id="chart_div" style="width: 100%; height: 100%;z-index: 0;">
+        
+      </div>
+    </div>
+</div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -31,7 +40,6 @@
       }
     </script>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
   google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
@@ -47,7 +55,7 @@
     var options = {
       title: 'Розподіл вулиць у системі за довжиною',
       vAxis: {title: 'Кількість вулиць, шт'},
-      vAxis: {title: 'Довжина, м'},
+      hAxis: {title: 'Довжина, м'},
       //isStacked: true
     };
 
