@@ -1,4 +1,13 @@
 {% extends 'first_base.html' %}
+
+{% block with-content %}
+<div class="w3-main" style="margin-left:300px;height: 100%;">
+  {% block content %}
+
+  {% endblock %}
+</div>
+{% endblock with-content %}
+
 {% block sidebar %}
     <nav class="w3-sidebar w3-collapse w3-white w3-rightbar w3-border-teal" style="z-index:3;width:300px;display: none; " id="mySidebar">
     <h4 class="w3-padding">Панель модератора:</h4>
@@ -8,11 +17,3 @@
         {% endblock %}
       </nav>
 {% endblock %}
-
-{% block with-content %}
-<div class="w3-main" style="margin-left:300px;height: 100%;">
-  {% block content %}
-
-  {% endblock %}
-</div>
-{% endblock with-content %}

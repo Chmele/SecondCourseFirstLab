@@ -38,7 +38,11 @@
     };
     var geojson = {{geom.geojson | safe}}
     L.vectorGrid.slicer(geojson).addTo(map);
-    //map.fitBounds(geojsonLayer.getBounds());
+    var lon = "30.5238";
+    var lat = "50.45466";
+    map.setView([lat, lon], 12 );
+    //map.fitBounds(geojson.getBounds());
+
   }
 </script>
 {% endblock %}

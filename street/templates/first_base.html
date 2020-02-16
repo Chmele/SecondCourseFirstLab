@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -15,15 +14,15 @@
 
 <body style="height: 100vh;">
   <div class="sticky" style="z-index: 10;">
-    <div class="w3-row w3-bar w3-teal w3-large" style="z-index: 10; display: block;">
+    <div class="w3-row w3-bar w3-teal" style="z-index: 10; display: block;">
     {% block navbar-items %}
       <button class="w3-bar-item w3-button w3-hover-white" onclick="w3_open();"><i class="fa fa-bars"></i></button>
-      <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i>  Вулиці</a>
-      <a href="{% url 'main:stats' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i>  Статистика</a>
-      <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i>  Додаткова інформація</a>
+      <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i><i class="w3-hide-medium w3-hide-small"> Вулиці</i></a>
+      <a href="{% url 'main:stats' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i><i class="w3-hide-medium w3-hide-small">  Статистика</i></a>
+      <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i><i class="w3-hide-medium w3-hide-small">  Додаткова інформація</i></a>
       <a class="w3-button w3-right w3-hover-white"
         {% if user.is_authenticated %}
-        href="/admin">Адмін сторінка
+        href="/admin"><i class="fa fa-user-circle"></i><i class="w3-hide-medium w3-hide-small">  Адмін сторінка</i>
         {% else %}
         href="{% url 'login' %}">Увійти
         {% endif %}
@@ -48,16 +47,5 @@
 {% endblock %}
 </body>
 </html>
-<script>
-    var mySidebar = document.getElementById("mySidebar");
-    function w3_open() {
-        console.log(mySidebar.style.display);
-      if (mySidebar.style.display === 'block') {
-        mySidebar.style.display = 'none';
-        
-      } else {
-        mySidebar.style.display = 'block';
-      }
-    }
-</script>
+<script src="{% static 'js/first_base.js' %}"></script>
 

@@ -1,6 +1,8 @@
-html,body,h1,h2,h3,h4,h5,a {
-    font-family: "Fantasy", sans-serif;
-    font-weight: lighter;}
+h1,h2,h3,h4,h5,a,i {
+    font-family: "Helvetica", sans-serif;
+    font-weight: lighter;
+    font-style: normal;
+  }
 a:hover{
   text-decoration:none;
   }

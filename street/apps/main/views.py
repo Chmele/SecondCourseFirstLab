@@ -1,6 +1,6 @@
 import os
 import copy
-
+from django.views.decorators.cache import cache_page
 from .models import *
 from .forms import *
 from django.shortcuts import render, redirect
@@ -14,6 +14,7 @@ from qsstats import QuerySetStats
 from dictionaries.models import *
 from django.contrib.gis.db.models.functions import Length
 
+@cache_page(60*60)
 def StatsView(request):
     streets = Street.objects.all()
     s = Segment.objects.all().distinct('district', 'street')
@@ -26,11 +27,6 @@ def StatsView(request):
     step = (max_len - min_len) / split_by
     q = Segment.objects.values('street').annotate(leng = Sum(Length('geom')))
     ret = [[
-        # "[ "
-        # + str(int(min_len + step * i))
-        # +", "
-        # + str(int(min_len + step * (i + 1)))
-        # + " )", 
         "≤ " + str(int(min_len + step * (i + 1))),
         q.filter(leng__gte= min_len + step * i)
          .filter(leng__lt= min_len + step * (i + 1))
@@ -40,7 +36,7 @@ def StatsView(request):
     segment_count = Segment.objects.count()
     return render(request, 'main/stats.html', {'values':values, 'len_stat':ret, 'street_count': street_count, 'segment_count': segment_count,})
 
-
+@cache_page(None)
 def CityDetailView(request):
     if request.method == 'POST' and 'date' in request.POST:
         dat = request.POST['date']
@@ -48,7 +44,7 @@ def CityDetailView(request):
         dat = date.today()
     date_now = date.today()
     street_list = actual_streets(dat)
-    segment_list = actual_segments(dat)[:1000]
+    segment_list = actual_segments(dat)#[:12000]
     geom = [g.geom for g in segment_list]
     for i in range(len(geom)):
         if i == 0:

@@ -4,7 +4,6 @@ from .models import *
 from django.db.models import Q
 import django.utils
 import datetime
-#GERMANYUK COMMENT
 from django.contrib.gis.db import models
 
 import os
@@ -40,8 +39,8 @@ class DocumentsStreet(models.Model):
         return os.path.basename(str(self.document))
 
 class OperationSegment(models.Model):
-    old = models.ForeignKey('Segment', models.DO_NOTHING, related_name='old', db_column='old', blank=True, null=True, verbose_name='Старий сегмент')
-    new = models.ForeignKey('Segment', models.DO_NOTHING, related_name='new', db_column='new', blank=True, null=True, verbose_name='Новий сегмент')
+    old = models.ForeignKey('Segment', models.CASCADE, related_name='old', db_column='old', blank=True, null=True, verbose_name='Старий сегмент')
+    new = models.ForeignKey('Segment', models.CASCADE, related_name='new', db_column='new', blank=True, null=True, verbose_name='Новий сегмент')
     date = models.DateField('Дата проведення операції над сегментом', blank=False, null=False, default=django.utils.timezone.now)
     document = models.ForeignKey(DocumentsStreet, models.DO_NOTHING, blank=False, null=False, default=1)
 
@@ -52,8 +51,8 @@ class OperationSegment(models.Model):
 
 
 class OperationSegmentStreet(models.Model):
-    old = models.ForeignKey('SegmentStreet', models.DO_NOTHING, related_name='old', db_column='old', blank=True, null=True, verbose_name='Старий зв\'язок')
-    new = models.ForeignKey('SegmentStreet', models.DO_NOTHING, related_name='new', db_column='new', blank=True, null=True, verbose_name='Новий зв\'язок')
+    old = models.ForeignKey('SegmentStreet', models.CASCADE, related_name='old', db_column='old', blank=True, null=True, verbose_name='Старий зв\'язок')
+    new = models.ForeignKey('SegmentStreet', models.CASCADE, related_name='new', db_column='new', blank=True, null=True, verbose_name='Новий зв\'язок')
     date = models.DateField('Дата проведення операції над парою вулиця-сегмент', blank=False, null=False, default=django.utils.timezone.now)
     document = models.ForeignKey(DocumentsStreet, models.DO_NOTHING, blank=False, null=False, default=1)
 
@@ -64,8 +63,8 @@ class OperationSegmentStreet(models.Model):
 
 
 class OperationStreet(models.Model):
-    old = models.ForeignKey('Street', models.DO_NOTHING, related_name='old', db_column='old', blank=True, null=True, verbose_name='Стара вулиця')
-    new = models.ForeignKey('Street', models.DO_NOTHING, related_name='new', db_column='new', blank=True, null=True, verbose_name='Нова вулиця')
+    old = models.ForeignKey('Street', models.CASCADE, related_name='old', db_column='old', blank=True, null=True, verbose_name='Стара вулиця')
+    new = models.ForeignKey('Street', models.CASCADE, related_name='new', db_column='new', blank=True, null=True, verbose_name='Нова вулиця')
     date = models.DateField('Дата проведення операції над вулицею', blank=False, null=True, default=django.utils.timezone.now)
     document = models.ForeignKey(DocumentsStreet, models.DO_NOTHING, blank=False, null=True, default=1)
 
@@ -137,7 +136,7 @@ class Street(models.Model):
             Q(segmentstreet__date_start__lte = date)|Q(segmentstreet__date_start=None),
             Q(segmentstreet__date_end__gt = date)|Q(segmentstreet__date_end=None),
         )
-        return segments.count();
+        return segments.count()
 
     # !!not tested
     def getDistricts(self, date = date.today):
@@ -153,8 +152,8 @@ class Street(models.Model):
         return districts.distinct()
 
 class SegmentStreet(models.Model):
-    street = models.ForeignKey(Street, models.DO_NOTHING, blank=False, null=False, default=1)
-    segment = models.ForeignKey(Segment, models.DO_NOTHING, blank=False, null=False, default=1)
+    street = models.ForeignKey(Street, models.CASCADE, blank=False, null=False, default=1)
+    segment = models.ForeignKey(Segment, models.CASCADE, blank=False, null=False, default=1)
     date_start = models.DateField('Дата початку', blank=True, null=True)
     date_end = models.DateField('Дата кінця', blank=True, null=True)
     operation = models.ManyToManyField('self', through='OperationSegmentStreet', symmetrical=False)

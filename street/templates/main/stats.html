@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 
-{% block sidebar %}
-{% endblock sidebar %}
-
 {% block content %}
 
+{% load static %}
 <div class="w3-row-padding w3-margin-top">
 
   <div class="w3-half">
@@ -41,35 +39,37 @@
     </div>
 
 </div>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Task', 'Hours per Day'],
-            {% for i in values %}
-              ['{{ i.0 }}', {{ i.1 }} ],
-            {% endfor %}
-        ]);
-        var data2 = google.visualization.arrayToDataTable([
-            ['Проміжок', 'Кількість вулиць'],
-            {% for i in len_stat %}
-              ['{{ i.0 }}', {{ i.1 }} ],
-            {% endfor %}
-        ]);
-        var options = {
-          title: 'Кількість вулиць за районами'
-        };
-        var options2 = {
-          title: 'Розподіл вулиць у системі за довжиною',
-          vAxis: {title: 'Кількість вулиць, шт'},
-          hAxis: {title: 'Довжина, м'}
-        };
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        var chart2 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-        chart2.draw(data2, options2);
+    
+    
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      {% for i in values %}
+        ['{{ i.0 }}', {{ i.1 }}],
+      {% endfor %}
+      ]);
+    var data2 = google.visualization.arrayToDataTable([
+      ['Проміжок', 'Кількість вулиць'],
+      {% for i in len_stat %}
+        ['{{ i.0 }}', {{ i.1 }}],
+      {% endfor %}
+      ]);
+    var options = {
+      title: 'Кількість вулиць за районами'
+    };
+    var options2 = {
+      title: 'Розподіл вулиць у системі за довжиною',
+      vAxis: { title: 'Кількість вулиць, шт' },
+      hAxis: { title: 'Довжина, м' }
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    var chart2 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+    chart2.draw(data2, options2);
   }
 </script>
 {% endblock content %}
