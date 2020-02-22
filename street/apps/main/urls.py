@@ -17,4 +17,5 @@ urlpatterns = [
     path('operations/<int:doc_id>/', views.operations, name='operations'),
     path('<int:street_id>/segment/<int:segment_id>/change/geom/', views.segment_change_geom, name='segment_change_geom'),
     path('<int:street_id>/segment/<int:segment_id>/change/attributes/', views.segment_change_attributes, name='segment_change_attributes'),
+    path('<int:street_id>/report/', views.export_street_segments, name='export'),
 ]

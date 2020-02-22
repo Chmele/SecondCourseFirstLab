@@ -1,17 +1,52 @@
 import os
 import copy
+import xlwt
 from django.views.decorators.cache import cache_page
 from .models import *
 from .forms import *
 from django.shortcuts import render, redirect
-from django.http import Http404
 from datetime import datetime, date
 from django.db.models import Q, Count, Sum
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from dictionaries.models import *
 from django.contrib.gis.db.models.functions import Length
+
+
+def export_street_segments(request, street_id):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="segments.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Segments')
+    street = Street.objects.get(id = street_id)
+    # Sheet header, first row
+    row_num = 0
+    ws.write(row_num, 0, street.type.name + ": " + street.name)
+
+    row_num = 1
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['id', 'Район', 'Довжина', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Segment.objects.filter(street__id=street_id).annotate(leng = (Length('geom')))
+    for row in rows:
+        row_num += 1
+        ws.write(row_num, 0, row.id, font_style)
+        ws.write(row_num, 1, row.district.name, font_style)
+        ws.write(row_num, 2, str(row.leng), font_style)
+
+    wb.save(response)
+    return response
 
 @cache_page(60*60)
 def StatsView(request):
