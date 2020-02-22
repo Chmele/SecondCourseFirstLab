@@ -5,9 +5,7 @@ from django.db.models import Q
 import django.utils
 import datetime
 from django.contrib.gis.db import models
-
 import os
-#django.utils.timezone.now
 class StreetAlternativeName(models.Model):
     name = models.CharField('Назва вулиці', max_length= 100, blank=False, null=False, default="")
     street = models.ForeignKey("Street", models.DO_NOTHING, blank=False, null=False, default=1)
@@ -21,6 +19,7 @@ class StreetAlternativeName(models.Model):
     def str(self):
         return self.name
 
+
 class DocumentsStreet(models.Model):
     name = models.ForeignKey(DictStreetOperations, models.DO_NOTHING, blank=False, null=True, verbose_name='Назва документу', default=1)
     document = models.FileField( upload_to='files/', verbose_name='Документ')
@@ -28,15 +27,14 @@ class DocumentsStreet(models.Model):
     path_pdf = models.TextField('Шлях до PDF', blank=True, null=True, default="")
     pub_date = models.DateField('Дата додавання документу', blank=False, null=True, default=datetime.date.today)
 
-
     class Meta:
         verbose_name = 'Документ'
         verbose_name_plural = 'Таблиця документів'
         db_table = 'dit_documents_street'
 
-
     def origin_name(self):
         return os.path.basename(str(self.document))
+
 
 class OperationSegment(models.Model):
     old = models.ForeignKey('Segment', models.CASCADE, related_name='old', db_column='old', blank=True, null=True, verbose_name='Старий сегмент')
@@ -92,8 +90,7 @@ class Segment(models.Model):
         verbose_name_plural = 'Перелік сегментів'
 
     def __str__(self):
-        return "id: " + str(self.id) + " " #+ self.type.name
-
+        return "id: " + str(self.id) + " " 
 
     def getStreet(self, date=date.today()):
         street = Street.objects.filter(
@@ -103,12 +100,11 @@ class Segment(models.Model):
         )
         return street
 
-        
     @staticmethod
     def free_segments():
         not_free_id = SegmentStreet.objects.values('segment').distinct()
         segment_list = Segment.objects.exclude(id__in=not_free_id)
-        return segment_list #render(request, 'main/detail.html', {'free_segments': segment_list})
+        return segment_list 
 
 class Street(models.Model):
     name = models.CharField('Назва вулиці', max_length= 100, blank=True, null=True)
@@ -130,26 +126,70 @@ class Street(models.Model):
     def __str__(self):
         return self.name
 
-    def count_segments_by_date(self, date = date.today()):
-        segments = Segment.objects.filter(
-            Q(street__id=self.id),
-            Q(segmentstreet__date_start__lte = date)|Q(segmentstreet__date_start=None),
-            Q(segmentstreet__date_end__gt = date)|Q(segmentstreet__date_end=None),
-        )
-        return segments.count()
+    def AllChronologicSegments(self, date):
+        ret = {}
+        ret.update(self.BeforeStreets())
+        ret.update({self: self.segments.all()})
+        ret.update(self.AfterStreets())
+        return ret
 
-    # !!not tested
-    def getDistricts(self, date = date.today):
-        segments = Segment.objects.filter(
+    def BeforeStreets(self):
+        q = OperationStreet.objects.filter(new=self)
+        ret = {}
+        for i in q:
+            if not i.old is None :
+                ret.update({i.old: i.old.segments.all()})
+                ret.update(i.old.BeforeStreets())
+        return ret
+
+    def AfterStreets(self):
+        q = OperationStreet.objects.filter(old=self)
+        ret = {}
+        for i in q:
+            if not i.new is None :
+                ret.update({i.new: i.new.segments.all()})
+                ret.update(i.new.AfterStreets())
+        return ret
+
+    def SegmentsByDate(self, date):
+        q = Segment.objects.filter(
             Q(street__id=self.id),
             Q(segmentstreet__date_start__lte = date)|Q(segmentstreet__date_start=None),
             Q(segmentstreet__date_end__gt = date)|Q(segmentstreet__date_end=None),
         )
-        districts = []
-        for segment in segments:
-            districts.append(segment.district)
-        
-        return districts.distinct()
+        return q
+    
+    def Centroid(self):
+        x, y = [], []
+        sumx, sumy=0, 0
+        xcoord, ycoord = 30.5238, 50.45466
+        for each in self.segments.all():
+            x.append(each.geom.centroid.x)
+            sumx+=each.geom.centroid.x
+            y.append(each.geom.centroid.y)
+            sumy+=each.geom.centroid.y
+            if len(x):
+                xcoord = sumx/len(x)
+            if len(y):
+                ycoord = sumy/len(y)
+        return xcoord, ycoord 
+    
+    @staticmethod
+    def ActualStreets(date):
+        result_list = []
+        pairs = SegmentStreet.objects.all()
+        actual_pairs = pairs.filter(
+            Q(date_start__lt = date)|Q(date_start=None),
+            Q(date_end__gte = date)|Q(date_end=None),
+        )
+        streetsInPairs = pairs.values_list('street',flat = True).distinct()
+        result_list += actual_pairs.values_list('street',flat = True).distinct()
+        streets = Street.objects.values_list('id', flat = True).exclude(id__in=streetsInPairs)
+        result_list += streets
+        ret = Street.objects.filter(id__in=result_list)
+        return ret
+
+
 
 class SegmentStreet(models.Model):
     street = models.ForeignKey(Street, models.CASCADE, blank=False, null=False, default=1)

@@ -5,7 +5,6 @@ from . import views
 app_name = 'main'
 urlpatterns = [
     path('', views.search, name='search'),
-    path('city/', views.CityDetailView, name = 'city-detail'),
     path('stats/', views.StatsView, name = 'stats'),
     path('<int:street_id>/segment/<int:segment_id>/', views.segment_detail, name='segment_detail'),
     path('street_chronology/<int:street>', views.StreetChronologyView, name = 'street_chronology' ),
