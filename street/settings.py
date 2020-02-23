@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'dictionaries.apps.DictionariesConfig',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 ROOT_URLCONF = 'street.urls'
 

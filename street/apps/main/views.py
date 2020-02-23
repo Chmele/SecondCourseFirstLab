@@ -12,15 +12,33 @@ from django.urls import reverse
 from django.views.generic import DetailView, ListView
 from dictionaries.models import *
 from django.contrib.gis.db.models.functions import Length
+from tablib import Dataset
+from main.resources import *
+from django.utils.encoding import escape_uri_path
 
+def simple_upload(request, street_id):
+    if request.method == 'POST':
+        person_resource = SegmentResource()
+        dataset = Dataset()
+        new_persons = request.FILES['myfile']
+
+        imported_data = dataset.load(new_persons.read())
+        result = person_resource.import_data(dataset, dry_run=True)  # Test the data import
+
+        if not result.has_errors():
+            person_resource.import_data(dataset, dry_run=False)  # Actually import now
+
+    return render(request, 'main/import.html')
 
 def export_street_segments(request, street_id):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="segments.xls"'
+    street = Street.objects.get(id = street_id)
+    filename = '{}:{}.xls'.format(street.type.name, street.name)
+    response['Content-Disposition'] = "attachment; filename*=UTF-8''"+ escape_uri_path(filename)
 
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Segments')
-    street = Street.objects.get(id = street_id)
+    
     # Sheet header, first row
     row_num = 0
     ws.write(row_num, 0, street.type.name + ": " + street.name)

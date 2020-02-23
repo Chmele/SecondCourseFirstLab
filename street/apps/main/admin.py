@@ -2,6 +2,7 @@ from django.contrib.gis import admin
 from django.db import models
 from .models import *
 from leaflet.admin import LeafletGeoAdminMixin
+from import_export.admin import ImportExportModelAdmin
 
 class SegmentStreetInline(admin.TabularInline):
     model = SegmentStreet
@@ -72,7 +73,7 @@ class AdminOperationSegment(admin.ModelAdmin):
     search_fields = ['new', 'old']
     ordering = ('id',)
 
-class AdminSegment(admin.OSMGeoAdmin):
+class AdminSegment(admin.OSMGeoAdmin, ImportExportModelAdmin):
     list_display = ['id', 'district']
     fieldsets = [
         (None,               {'fields': ['road_index', 'width', 'cover_type', 'geom']}),

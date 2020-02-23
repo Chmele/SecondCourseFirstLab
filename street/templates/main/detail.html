@@ -32,6 +32,7 @@
 
 <div id="right_sidebar" class="w3-white w3-container w3-padding" style="display:none; height:100%; position: fixed; top:40px; right:0px; z-index: 1000;">
   <a class="w3-button w3-teal w3-round-large" href="{% url 'main:export' street.id %}"><i class="fa fa-book"></i>  Сформувати звіт</a>
+  <a class="w3-button w3-teal w3-round-large" href="{% url 'main:import' street.id %}"><i class="fa fa-upload"></i>  Імпорт сегментів</a>
   <!-- Кількість сегментів: {{ street.count_segments_by_date }} -->
   <form method="POST" class="post-form" action="{% url 'main:detail' street.id %}">{% csrf_token %}
     <label for="#date">Переглянути вулицю на дату:</label>
