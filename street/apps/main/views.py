@@ -15,6 +15,25 @@ from django.contrib.gis.db.models.functions import Length
 from tablib import Dataset
 from main.resources import *
 from django.utils.encoding import escape_uri_path
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('main:search')
+    else:
+        form = UserCreationForm()
+    return render(request, 'main/signup.html', {'form': form})
+
 
 def simple_upload(request, street_id):
     if request.method == 'POST':
@@ -107,7 +126,7 @@ def search(request):
     street_count = street_list.count()
     district_list = DictDistricts.objects.all()
     street_type_list = DictStreetType.objects.all()
-    return render(request, 'main/street_list.html', {'street_list': street_list, 'street_count': street_count, 'district_list': district_list, 'street_type_list': street_type_list, 'date_now': str(date_now)})
+    return render(request, 'main/street_list.html', { 'street_list': street_list, 'street_count': street_count, 'district_list': district_list, 'street_type_list': street_type_list, 'date_now': str(date_now)})
 
 def search_ajax(request):
     if request.is_ajax():
@@ -131,6 +150,8 @@ def search_ajax(request):
 
         street_list = list(street.values_list('id', 'name', 'type__name'))
         count_of_segments = count_segments_for_streets(street_list, searchDate)
+        # q = list(Segment.objects.values('street').annotate(leng = Sum(Length('geom'))).order_by('street').values_list('leng'))
+        # q = [str(i[0]) for i in q]
         response = {'street_list': street_list, 'count_of_segments': count_of_segments}
 
         return JsonResponse(response, safe=False)

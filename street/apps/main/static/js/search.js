@@ -5,7 +5,7 @@ $(document).ready(function () {
   searchName = document.getElementById("searchName");
   searchDate = document.getElementById("searchDate");
   streets = document.getElementById("streets");
-  countStreets = document.getElementById("countStreets")
+  // countStreets = document.getElementById("countStreets")
 
   districtSelect = document.getElementById("districtSelect");
   typeSelect = document.getElementById("typeSelect");
@@ -30,7 +30,7 @@ $(document).ready(function () {
             },
             success: function(data) {
               createTable(data);
-              countStreets.innerHTML = data.street_list.length
+              // countStreets.innerHTML = data.street_list.length
               requestSent = false;
             },
             dataType: 'json',

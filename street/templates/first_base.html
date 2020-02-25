@@ -20,13 +20,17 @@
       <a href="{% url 'main:search' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-road"></i><i class="w3-hide-medium w3-hide-small"> Вулиці</i></a>
       <a href="{% url 'main:stats' %}" class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-pie-chart"></i><i class="w3-hide-medium w3-hide-small">  Статистика</i></a>
       <a href=# class="w3-bar-item w3-left w3-button w3-padding w3-hover-white" id="top_bar_item"><i class="fa fa-info-circle"></i><i class="w3-hide-medium w3-hide-small">  Додаткова інформація</i></a>
+      {% if user.is_staff %}
       <a class="w3-button w3-right w3-hover-white"
-        {% if user.is_authenticated %}
         href="/admin"><i class="fa fa-user-circle"></i><i class="w3-hide-medium w3-hide-small">  Адмін сторінка</i>
-        {% else %}
-        href="{% url 'login' %}">Увійти
-        {% endif %}
       </a>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <a class="w3-button w3-right w3-hover-white" href="{% url 'logout' %}?next=/">Вийти</a>
+      {% else %}
+      <a class="w3-button w3-right w3-hover-white" href="{% url 'login' %}">Увійти</a>
+        
+      {% endif %}
     {% endblock navbar-items%}
     </div>
   </div>
