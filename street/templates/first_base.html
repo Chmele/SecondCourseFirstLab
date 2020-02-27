@@ -27,6 +27,7 @@
       {% endif %}
       {% if user.is_authenticated %}
       <a class="w3-button w3-right w3-hover-white" href="{% url 'logout' %}?next=/">Вийти</a>
+      <a class="w3-bar-item w3-right w3-padding w3-white"><i class="fa fa-user"></i> {{user.username}}</a>
       {% else %}
       <a class="w3-button w3-right w3-hover-white" href="{% url 'login' %}">Увійти</a>
         

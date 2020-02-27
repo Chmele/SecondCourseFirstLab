@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="w3-center">
+<div class="w3-center w3-display-container" style="width: 100%;margin-top:5%">
+<div class="w3-center w3-display-container w3-middle" style="width: 45%; margin-left: auto; margin-right: auto;">
     <form method="post">
     {% csrf_token %}
     {% for field in form %}
-            {{ field.errors }}
+    <div class="w3-bar" style="width: 100%;">
+        <div class="w3-left w3-bar-item">
             {{ field.label_tag }}
+        </div>
+        <div class="w3-right w3-bar-item">
             {{ field }}
+        </div>
+    </div>
+        <div class="w3-bar">
+            {{ field.errors }}
+        </div>
     {% endfor %}
-    <button type="submit"Submit</button>
+    <button class="w3-button w3-teal w3-hower-shadow-black" type="submit">Реєстрація аккаунту</button>
 </form>
+</div>
 </div>
 {% endblock %}
