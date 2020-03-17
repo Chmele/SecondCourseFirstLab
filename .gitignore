@@ -1,6 +1,9 @@
 ###backups###
 *.pgsql
 
+### Files ### 
+media/files
+
 ### Django ###
 *.log
 *.pot
